@@ -1,0 +1,12 @@
+.test-class{
+  color: red;}
+
+.anyClass{
+  font-size: 12px;}
+
+@mixin lol{
+  color: blue;}
+
+input[type="password"]{
+  @include lol;
+  background: red;}
