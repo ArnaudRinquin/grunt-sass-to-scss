@@ -11,6 +11,7 @@ module.exports = function(grunt) {
   'use strict';
 
   var p = require('prelude-ls');
+  var _ = grunt.util._;
 
   grunt.registerMultiTask('sass_to_scss', 'Convert sass to scss files', function() {
 
@@ -91,7 +92,7 @@ module.exports = function(grunt) {
           i: m != null ? m[0].length : 0,
           c: it
         };
-      })( input.split('\n') );
+      })( _.reject(input.split('\n'), function(line){ return line.match(/^\s*$/); }) );
 
       for (var i in lines) {
         idx = parseInt(i, 10);
