@@ -1,6 +1,6 @@
 .test-class
   color: red
-
+  /* comment that should be removed */
 .foo
   color: red
 

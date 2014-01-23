@@ -112,7 +112,8 @@ module.exports = function(grunt) {
       var raw_lines = _.reject(
         input.split('\n'), // split every lines
         function(line){
-          return line.match(/^\s*$/); // reject empty ones
+          // reject empty or \* *\ comment only lines
+          return line.match(/^\s*(\/\*.*\*\/)?\s*$/);
         }
       );
 
