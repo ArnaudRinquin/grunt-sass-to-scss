@@ -1,6 +1,6 @@
 # grunt-sass-to-scss
 
-> Convert sass to scss files
+> Convert sass to scss files. It is basivally a port from [@askucher](https://github.com/askucher) [script](http://develton.com/#/research/indent_to_braces_function). It also converts `+` and `=` sass specific syntaxe to scss `@include` and `@mixin`.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.2`
@@ -39,44 +39,23 @@ grunt.initConfig({
 
 #### options.separator
 Type: `String`
-Default value: `',  '`
+Default value: `'\n'`
 
-A string value that is used to do something with whatever.
-
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
-
-A string value that is used to do something else with whatever else.
+A string value that is used to separate files when merging them.
 
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+
+With default options, you can specify several files to be converted. The files
+will be merged with a new line.
 
 ```js
 grunt.initConfig({
   sass_to_scss: {
     options: {},
     files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
-
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
-
-```js
-grunt.initConfig({
-  sass_to_scss: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
+      'dest/style.scss': ['src/file1.sass', 'src/file2.sass'],
     },
   },
 });
@@ -86,4 +65,6 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+
+* 0.1.1 - Updated documentation, credits to @askucher
+* 0.1.0 - Initial version, wrong documentation, no credit
