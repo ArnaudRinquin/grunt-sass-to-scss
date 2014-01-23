@@ -30,11 +30,14 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     sass_to_scss: {
-      default_options: {
+      tests: {
         options: {
         },
         files: {
-          'tmp/default_options': ['test/fixtures/*.sass'],
+          'tmp/basic': ['test/fixtures/basic'],
+          'tmp/non_characters_selectors': ['test/fixtures/non_characters_selectors'],
+          'tmp/last_block_line_comment': ['test/fixtures/last_block_line_comment'],
+          'tmp/include_and_mixin_aliases': ['test/fixtures/include_and_mixin_aliases'],
         },
       }
     },

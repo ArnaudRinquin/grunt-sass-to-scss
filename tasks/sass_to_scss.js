@@ -13,6 +13,9 @@ module.exports = function(grunt) {
   var p = require('prelude-ls');
   var _ = grunt.util._;
 
+  var mixin_alias_regex = /(^\s*)=(\s*)/;
+  var include_alias_regex = /(^\s*)\+(\s*)/;
+
   grunt.registerMultiTask('sass_to_scss', 'Convert sass to scss files', function() {
 
     var options = this.options({
@@ -28,8 +31,6 @@ module.exports = function(grunt) {
       grunt.verbose.writeflags(validFiles, 'Valid files');
 
       writeFile(f.dest, concatOutput(validFiles, options));
-
-      grunt.log.writeln('File "' + f.dest + '" created.');
     });
   });
 
@@ -64,59 +65,99 @@ module.exports = function(grunt) {
     grunt.log.warn('Destination (' + path + ') not written because compiled files were empty.');
   };
 
-  var convertSassToScss = function(input){
-    var lines, idx, j, braces, bracesString, reg, reg2;
+  var replaceIncludeAlias = function(line){
+    return line.replace(include_alias_regex, function(match, spacesBefore, spacesAfter){
+      return spacesBefore + '@include' + (spacesAfter !== '' ? spacesAfter : ' ');
+    });
+  };
 
-    reg = /(^\s*)=(\s*)/;
-    reg2 = /(^\s*)\+(\s*)/;
+  var replaceMixinAlias = function(line){
+    return line.replace(mixin_alias_regex, function(match, spacesBefore, spacesAfter){
+      return spacesBefore + '@mixin' + (spacesAfter !== '' ? spacesAfter : ' ');
+    });
+  };
+
+  var insertBeforeComment = function(inserted, text){
+    var value = text.replace(/([^\/\/]*)(\/\/.*)?/,
+      function(match, beforeComments, comments){
+        return beforeComments + inserted + (comments ? comments : '');
+      }
+    );
+
+    return value;
+  };
+
+  var insertBeforeClosingBrackets = function(inserted, text){
+    var value = text.replace(/([^\}]*)(\/\/.*)?/,
+      function(match, beforeBrackets, brackets){
+        return beforeBrackets + inserted + (brackets ? brackets : '');
+      }
+    );
+
+    return value;
+  };
+
+  var convertSassToScss = function(input, options){
+    var lines, lastBlockLineIndex, braces, bracesString;
 
     function fn$(it){
       return lines.indexOf(it);
     }
     function fn1$(it){
-      return it.i > lines[i].i;
+      return it.indentation > lines[idx].indentation;
     }
 
     if (input != null) {
-      lines = p.map(function(it){
-        grunt.verbose.writeln('before=' + it);
-        it = it.replace(reg, function(match, p1, p2){
-          return p1 + '@mixin' + (p2 !== '' ? p2 : ' ');
-        });
-        it = it.replace(reg2, function(match, p1, p2){
-          return p1 + '@include' + (p2 !== '' ? p2 : ' ');
-        });
-        var m;
-        m = it.match(/^\s+/);
-        return {
-          i: m != null ? m[0].length : 0,
-          c: it
-        };
-      })( _.reject(input.split('\n'), function(line){ return line.match(/^\s*$/); }) );
 
-      for (var i in lines) {
-        idx = parseInt(i, 10);
-        if (lines[idx].c.match(/[a-z>~]+/)) {
-          j = p.last(
-          p.map(fn$)(
-          p.takeWhile(fn1$)(
-          p.drop(idx + 1)(
-          lines))));
-          if (j != null) {
-            lines[idx].c += '{';
-            lines[j].c += '}';
+      var raw_lines = _.reject(
+        input.split('\n'), // split every lines
+        function(line){
+          return line.match(/^\s*$/); // reject empty ones
+        }
+      );
+
+      // Cleanup lines and add indentation information
+      lines = _.map(raw_lines, function(line){
+
+        line = replaceIncludeAlias(line);
+        line = replaceMixinAlias(line);
+
+        var match = line.match(/^\s+/);
+
+        return {
+          indentation: match != null ? match[0].length : 0,
+          text: line
+        };
+      });
+
+      for (var idx in lines) {
+
+        idx = parseInt(idx, 10);
+        var line = lines[idx];
+        grunt.verbose.writeln('line', line);
+
+        if (line.text.match(/[a-z>~]+/)) {
+
+          lastBlockLineIndex = p.last(
+            p.map(fn$)(
+              p.takeWhile(fn1$)(
+                p.drop(idx + 1)( lines))));
+
+          if (lastBlockLineIndex != null) {
+
+            lines[idx].text = insertBeforeComment('{', lines[idx].text);
+            lines[lastBlockLineIndex].text = insertBeforeComment('}', lines[lastBlockLineIndex].text);
           } else {
-            braces = lines[idx].c.match(/\}+/);
-            bracesString = braces ? braces[0] : "";
-            lines[idx].c = lines[idx].c.replace(/\}+/, '') + ';' + bracesString;
+
+            lines[idx].text = insertBeforeClosingBrackets(';', lines[idx].text );
           }
         }
       }
-      return p.join('\n')(
-      p.map(function(it){
-        return it.c;
-      })(
-      lines));
+
+      // Return lines content joined in a single string
+      return _.map(lines, function(it){
+        return it.text;
+      }).join(grunt.util.normalizelf(options.separator));
     }
   };
 };
