@@ -78,13 +78,13 @@ module.exports = function(grunt) {
   };
 
   var insertBeforeComment = function(inserted, text){
-    var value = text.replace(/([^\/\/]*)(\/\/.*)?/,
-      function(match, beforeComments, comments){
-        return beforeComments + inserted + (comments ? comments : '');
-      }
-    );
+    var index = text.indexOf('//');
 
-    return value;
+    if(index > -1) {
+      return text.slice(0, index) + inserted + text.substr(index);
+    } else {
+      return text + inserted;
+    }
   };
 
   var insertBeforeClosingBrackets = function(inserted, text){
@@ -134,7 +134,6 @@ module.exports = function(grunt) {
 
         idx = parseInt(idx, 10);
         var line = lines[idx];
-        grunt.verbose.writeln('line', line);
 
         if (line.text.match(/[a-z>~]+/)) {
 

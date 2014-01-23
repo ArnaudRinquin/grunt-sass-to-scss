@@ -1,3 +1,7 @@
 .foo{
   color: blue;
   ;}// foobar
+//foo;
+.bar{
+  color: blue;
+  background: url(/image/bar.png);}
