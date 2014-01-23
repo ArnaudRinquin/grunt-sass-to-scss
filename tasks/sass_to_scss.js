@@ -98,7 +98,17 @@ module.exports = function(grunt) {
   };
 
   var insertBeforeClosingBrackets = function(inserted, text){
-    var splittedBeforeComments = splitBefore('//', text);
+
+    var match = text.match(/.*(#{([*+\-\$\w\s\d])*})/);
+    var start = '';
+    var end = text;
+
+    if(match){
+      start = match[0];
+      end = text.substr(start.length);
+    }
+
+    var splittedBeforeComments = splitBefore('//', end);
     var beforeComments = splittedBeforeComments[0];
     var splittedBeforeBrackets = splitBefore('}', beforeComments);
     var beforeBrackets = splittedBeforeBrackets[0];
@@ -112,7 +122,7 @@ module.exports = function(grunt) {
       value += splittedBeforeComments[1];
     }
 
-    return value;
+    return start + value;
   };
 
   var convertSassToScss = function(input, options){

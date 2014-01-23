@@ -66,6 +66,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* 0.1.9 - Ignore `#{ ... }` markup when inserting `;`
 * 0.1.8 - Remove // comment only lines
 * 0.1.7 - Remove /* comment */ only lines
 * 0.1.6 - Allow * only selectors
