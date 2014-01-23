@@ -87,12 +87,30 @@ module.exports = function(grunt) {
     }
   };
 
+  var splitBefore = function(before, text){
+    var index = text.indexOf(before);
+
+    if(index > -1) {
+      return [text.slice(0, index), text.substr(index)];
+    } else {
+      return [text];
+    }
+  };
+
   var insertBeforeClosingBrackets = function(inserted, text){
-    var value = text.replace(/([^\}]*)(\/\/.*)?/,
-      function(match, beforeBrackets, brackets){
-        return beforeBrackets + inserted + (brackets ? brackets : '');
-      }
-    );
+    var splittedBeforeComments = splitBefore('//', text);
+    var beforeComments = splittedBeforeComments[0];
+    var splittedBeforeBrackets = splitBefore('}', beforeComments);
+    var beforeBrackets = splittedBeforeBrackets[0];
+
+    var value = beforeBrackets + inserted;
+
+    if (splittedBeforeBrackets[1]) {
+      value += splittedBeforeBrackets[1];
+    }
+    if (splittedBeforeComments[1]) {
+      value += splittedBeforeComments[1];
+    }
 
     return value;
   };
@@ -113,7 +131,7 @@ module.exports = function(grunt) {
         input.split('\n'), // split every lines
         function(line){
           // reject empty or \* *\ comment only lines
-          return line.match(/^\s*(\/\*.*\*\/)?\s*$/);
+          return line.match(/^\s*(\/\*.*\*\/.*)?(\/{2}.*)?$/);
         }
       );
 
