@@ -1,7 +1,7 @@
 {
   "name": "grunt-sass-to-scss",
   "description": "Convert sass to scss files",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "homepage": "https://github.com/arnaudrinquin/grunt-sass-to-scss",
   "author": {
     "name": "Arnaud Rinquin",

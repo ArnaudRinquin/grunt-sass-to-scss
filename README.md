@@ -66,6 +66,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* 0.1.6 - Allow * only selectors
 * 0.1.5 - Fix [issue #3](https://github.com/ArnaudRinquin/grunt-sass-to-scss/issues/3) for real
 * 0.1.4 - Fix [#3](https://github.com/ArnaudRinquin/grunt-sass-to-scss/issues/3) + refactored tests and code
 * 0.1.3 - Fix [#1](https://github.com/ArnaudRinquin/grunt-sass-to-scss/issues/1)

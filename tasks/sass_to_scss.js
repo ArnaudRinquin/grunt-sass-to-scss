@@ -135,7 +135,7 @@ module.exports = function(grunt) {
         idx = parseInt(idx, 10);
         var line = lines[idx];
 
-        if (line.text.match(/[a-z>~]+/)) {
+        if (line.text.match(/[a-z>~*]+/)) {
 
           lastBlockLineIndex = p.last(
             p.map(fn$)(

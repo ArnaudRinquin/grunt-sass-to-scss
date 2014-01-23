@@ -1,4 +1,6 @@
 .bar{
   color: blue;
   > *{
-    color: red;}}
+    color: red;}
+  *{
+    color: orange;}}
