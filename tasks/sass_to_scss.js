@@ -96,7 +96,7 @@ module.exports = function(grunt) {
 
       for (var i in lines) {
         idx = parseInt(i, 10);
-        if (lines[idx].c.match(/[a-z]+/)) {
+        if (lines[idx].c.match(/[a-z>~]+/)) {
           j = p.last(
           p.map(fn$)(
           p.takeWhile(fn1$)(

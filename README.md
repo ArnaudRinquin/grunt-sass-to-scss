@@ -66,6 +66,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* 0.1.3 - Fix [#1](https://github.com/ArnaudRinquin/grunt-sass-to-scss/issues/1)
 * 0.1.2 - Fix [#2](https://github.com/ArnaudRinquin/grunt-sass-to-scss/issues/2)
 * 0.1.1 - Updated documentation, credits to @askucher
 * 0.1.0 - Initial version, wrong documentation, no credit

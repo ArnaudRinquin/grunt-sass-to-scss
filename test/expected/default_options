@@ -3,6 +3,10 @@
 .foo{
   color: red;
   background: blue;}
+.bar{
+  color: blue;
+  > *{
+    color: red;}}
 .anyClass{
   font-size: 12px;}
 @mixin lol{
